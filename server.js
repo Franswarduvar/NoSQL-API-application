@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.use(require('./routes'));
+app.use(require('./routes/API/index'));
 
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-api', {
