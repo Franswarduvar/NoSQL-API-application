@@ -1,11 +1,11 @@
-const {Users, Thoughts} = require('../models');
+const {userController, Thoughts} = require('../models');
 
 const thoughController = {
 
     createThought({params, body}, res) {
         Thoughts.create(body)
         .then(({_id}) => {
-            return Users.findOneAndUpdate({_id: params.userId}, {$push: {thoughts: _id}}, {new: true});
+            return userController.findOneAndUpdate({_id: params.userId}, {$push: {thoughts: _id}}, {new: true});
         })
         .then(dbUsersData => {
             if(!dbUsersData){

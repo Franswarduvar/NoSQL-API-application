@@ -10,7 +10,7 @@ const reactionSchema = new Schema(
         reactionBody: {
             type: String,
             required: true,
-            maxlength: 300
+            maxlength: 280,
         },
         username: {
             type: String,
@@ -19,7 +19,7 @@ const reactionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
+            get: (timestamp) => dateFormat(timestamp),
         }
     },
     {
@@ -37,12 +37,12 @@ const thoughtSchema = new Schema(
             type: String,
             required: true,
             minlength: 1,
-            maxlength: 300
+            maxlength: 280,
         },
         createdAt: {
             type: Date,
             default: Date.now,
-            get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
+            get: (timestamp) => dateFormat(timestamp),
         },
         username: {
             type: String,
