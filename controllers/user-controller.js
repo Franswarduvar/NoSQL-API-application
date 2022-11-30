@@ -1,28 +1,20 @@
-const Users = require('../models');
+const {user, thoughts} = require('../models');
 
 const userController = {
-    createUser({body}, res) {
-        Users.create(body)
-        .then(dbUsersData => res.json(dbUsersData))
-        .catch(err => res.status(400).json(err));
-    },
 
-
-
-   getAllUsers(req, res) {
-        Users.find({})
-        .populate({path: 'thoughts', select: '-__v'})
-        .populate({path: 'friends', select: '-__v'})
+   getAlluser(res) {
+        user.find({})
         .select('-__v')
-        .then(dbUsersData => res.json(dbUsersData))
+        .sort({_id: -1})
+        .then(dbuserData => res.json(dbuserData))
         .catch(err => {
             consol.log(err);
-            res.statue(500).json(err);
+            res.sendStatus(400);
         });
     },
 
 getUserbyId({params}, res) {
-    Users.User.findOne({_id: params.id})
+    user.findOne({_id: params.id})
     .populate({
         path: 'thoughts',
         select: '-__v'
@@ -31,63 +23,69 @@ getUserbyId({params}, res) {
         path: 'friends',
         select: '-__v'
     })
-    .then(dbUsersData => {
-        if(!dbUsersData){
-            res.status(404).json({message: 'Dude got some bad news no user was found with this id :('})
+    .then(dbuserData => {
+        if(!dbuserData){
+            res.status(404).json({message: 'Dude got some bad news no user was found with this id'});
             return;
         }
-        res.json(dbUsersData);
+        res.json(dbuserData);
     })
     .catch(err => {
         consol.log(err);
-        res.statue(400).json(err);
+        res.sendStatus(400);
     });
 },
 
+    createuser({body}, res) {
+        user.create(body)
+        .then(dbuserData => res.json(dbuserData))
+        .catch(err => res.json(err));
+        },
+
 updateUser({params, body}, res) {
-    Users.User.findOneAndUpdate({_id: params.id}, body, {new: true, runValidatores: true})
-    .then(dbUsersData => {
-        if(!dbUsersData){
+    user.findOneAndUpdate({_id: params.id}, body, {new: true, runValidatores: true})
+    .then(dbuserData => {
+        if(!dbuserData){
             res.status(404).json({message: 'Dude got some bad news no user was found with this id :('})
             return;
         }
-        res.json(dbUsersData);
+        res.json(dbuserData);
     })
     .catch(err => res.json(err))
 },
 
-deleteUsers({params}, res) {
-    Users.findOneAndDelete({_id: params.id})
-    .then(dbUsersData => {
-        if(!dbUsersData){
+deleteuser({params}, res) {
+    user.findOneAndDelete({_id: params.id})
+    .then(dbuserData => {
+        if(!dbuserData){
             res.status(404).json({message: 'Dude got some bad news no user was found with this id :('})
             return;
         }
-        res.json(dbUsersData);
+        res.json(dbuserData);
     })
     .catch(err => res.json(err))
 },
 
 addFriend({params}, res) {
-    User.findOneAndUpdate({_id: params.id}, {$push: {friends: params.friendId}}, {new: true})
-    .then((dbUsersData) => {
-        if(!dbUsersData){
+    user.findOneAndUpdate({_id: params.id}, {$push: {friends: params.friendId}}, {new: true})
+    .then((dbuserData) => {
+        if(!dbuserData){
             res.status(404).json({message: 'Dude got some bad news no user was found with this id :('})
             return;
         }
-        res.json(dbUsersData);
+        res.json(dbuserData);
     })
     .catch(err => res.json(err))
 },
 
 deleteFriend({params}, res) {
-    User.findOneAndUpdate({_id: params.id}, {$push: {friends: params.friendId}}, {new: true})
-    .then((dbUsersData) => {
-        if(!dbUsersData){
+    user.findOneAndUpdate({_id: params.id}, {$push: {friends: params.friendId}}, {new: true})
+    .then((dbuserData) => {
+        if(!dbuserData){
             res.status(404).json({message: 'Dude got some bad news no user was found with this id :('})
             return;
         }
-        res.json(dbUsersData);
+        res.json(dbuserData);
     })
     .catch((err) => res.status(400).json(err));
 }
